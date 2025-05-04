@@ -1,0 +1,5 @@
+customtkinter~=5.2.2
+pandas~=2.2.2
+peewee~=3.18.1
+matplotlib~=3.9.2
+numpy~=1.26.4
