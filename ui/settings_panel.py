@@ -108,56 +108,37 @@ class SettingsPanel(ctk.CTkFrame):
         messagebox.showinfo("Success", f"Theme changed to {new_theme}")
 
     def export_transactions(self):
-        """
-        Export all transactions to a CSV file.
-        
-        Retrieves transaction data using the analytics module,
-        prompts the user for a save location, and exports the data.
-        Shows error messages if the export fails.
-        """
-        try:
-            # Get all transactions without limit
-            df = self.analytics.get_transaction_history(limit=None) 
+        df = self.analytics.get_transaction_history(limit=None) 
 
-            # Check if there are transactions to export
-            if df.empty:
-                messagebox.showinfo("Export Transactions", "No transactions to export")
-                return
+        if df.empty:
+            messagebox.showinfo("Export Transactions", "No transactions to export")
+            return
 
-            # Format transactions for export
-            transactions = []
-            for _, row in df.iterrows():
-                date_str = row['date'].strftime("%Y-%m-%d")
+        transactions = []
+        for _, row in df.iterrows():
+            date_str = row['date'].strftime("%Y-%m-%d")
 
-                transaction = {
-                    'Date': date_str,
-                    'Category': row['category'],
-                    'Description': row['description'] or "",
-                    'Amount': f"{row['amount']:.2f}",
-                    'Type': "Income" if row['is_income'] else "Expense"
-                }
-                transactions.append(transaction)
+            transaction = {
+                'Date': date_str,
+                'Category': row['category'],
+                'Description': row['description'] or "",
+                'Amount': f"{row['amount']:.2f}",
+                'Type': "Income" if row['is_income'] else "Expense"
+            }
+            transactions.append(transaction)
 
-            # Prompt user for save location
-            file_path = filedialog.asksaveasfilename(
-                defaultextension=".csv",
-                filetypes=[("CSV files", "*.csv"), ("All files", "*.*")],
-                title="Export Transactions"
-            )
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".csv",
+            filetypes=[("CSV files", "*.csv"), ("All files", "*.*")],
+            title="Export Transactions"
+        )
 
-            # Return if user cancels the dialog
-            if not file_path:  
-                return
+        if not file_path:  
+            return
 
-            # Export the transactions to the selected file
-            success, result = export_transactions(transactions, file_path)
+        success, result = export_transactions(transactions, file_path)
 
-            # Show appropriate message based on export result
-            if success:
-                messagebox.showinfo("Export Successful", f"Transactions exported to:\n{result}")
-            else:
-                messagebox.showerror("Export Failed", result)
-
-        except Exception as e:
-            # Show error message if export fails
-            messagebox.showerror("Export Error", f"An error occurred while exporting: {str(e)}")
+        if success:
+            messagebox.showinfo("Export Successful", f"Transactions exported to:\n{result}")
+        else:
+            messagebox.showerror("Export Failed", result)

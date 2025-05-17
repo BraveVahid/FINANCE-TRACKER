@@ -25,26 +25,9 @@ def set_dark_theme():
 
 
 class ChartGenerator:
-    """
-    A class for generating various financial charts using matplotlib.
-    
-    This class provides methods to create pie charts, bar charts, and line charts
-    for financial data visualization with support for light and dark themes.
-    """
     
     @staticmethod
     def create_pie_chart(data, frame, theme="Light"):
-        """
-        Create a pie chart visualizing expense breakdown by category.
-        
-        Args:
-            data (dict): Dictionary of expense data by category
-            frame: The tkinter frame where the chart will be placed
-            theme (str, optional): Visual theme ("Light" or "Dark"). Defaults to "Light".
-            
-        Returns:
-            FigureCanvasTkAgg: The matplotlib canvas containing the chart
-        """
         plt.close('all')
         plt.style.use('default')
 
