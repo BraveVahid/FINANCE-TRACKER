@@ -17,7 +17,6 @@ def export_transactions(transactions, file_path="transactions"):
         return False, f"Error: The directory for '{file_path}' does not exist."
 
     except PermissionError:
-        return False, f"Error: Permission denied to write to '{file_path}'."
-
+        return False, f"Error: Access to write to this location is denied '{file_path}'."
     except:
         return False

@@ -3,8 +3,6 @@ from datetime import datetime
 from database.db import db
 
 
-
-
 class Transaction(Model):
     amount = FloatField() 
     description = CharField(null=True)

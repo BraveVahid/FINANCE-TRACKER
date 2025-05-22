@@ -8,4 +8,4 @@ if __name__ == "__main__":
         app = FinanceTrackerApp()
         app.run()
     except Exception as e:
-        print(f"{e.__class__.__name__} running error")
+        print(f"{e.__class__.__name__} in main.py")

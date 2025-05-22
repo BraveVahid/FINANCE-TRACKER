@@ -1,10 +1,10 @@
 from datetime import datetime
 from database.models import Transaction
 from peewee import fn
+from utils.crypto import CryptoManager
 
 
 class TransactionManager:
-
     @staticmethod
     def add_transaction(amount, category_name, description="", is_income=False, date=None):
         if date is None:

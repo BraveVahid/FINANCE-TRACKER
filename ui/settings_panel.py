@@ -6,51 +6,27 @@ from utils.export_data import export_transactions
 
 
 class SettingsPanel(ctk.CTkFrame):
-    """
-    A panel for managing application settings and exporting data.
-    
-    This class provides a user interface for changing application theme
-    and exporting transaction data to CSV files.
-    
-    Attributes:
-        settings: The application settings object from the database
-        refresh_callback: A callback function to refresh the main UI when settings change
-        analytics: An instance of FinancialAnalytics for accessing transaction data
-    """
-
     def __init__(self, parent, refresh_callback=None):
         super().__init__(parent)
 
-        # Load current settings from database
         self.settings = Settings.select().first()
         self.refresh_callback = refresh_callback
         self.analytics = FinancialAnalytics()
 
-        # Configure the frame appearance
         self.configure(fg_color="transparent")
 
-        # Configure grid layout
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        # Set up UI components
         self.setup_settings_panel()
 
     def setup_settings_panel(self):
-        """
-        Set up all UI components for the settings panel.
-        
-        Creates frames for theme settings and data export options.
-        """
-        # Main container frame
         main_frame = ctk.CTkFrame(self)
         main_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
 
-        # Title label
         title_label = ctk.CTkLabel(main_frame, text="Application Settings", font=ctk.CTkFont(size=20, weight="bold"))
         title_label.pack(pady=(20, 30))
 
-        # Theme selection section
         theme_frame = ctk.CTkFrame(main_frame)
         theme_frame.pack(fill="x", pady=10)
 
@@ -68,7 +44,6 @@ class SettingsPanel(ctk.CTkFrame):
         theme_button = ctk.CTkButton(theme_frame, text="Toggle Theme", command=self.toggle_theme)
         theme_button.pack(fill="x", padx=15, pady=(0, 15))
 
-        # Data export section
         export_frame = ctk.CTkFrame(main_frame)
         export_frame.pack(fill="x", pady=10)
 
@@ -82,29 +57,18 @@ class SettingsPanel(ctk.CTkFrame):
         export_button.pack(fill="x", padx=15, pady=(0, 15))
 
     def toggle_theme(self):
-        """
-        Toggle between Light and Dark themes.
-        
-        Updates the theme setting in the database and refreshes the UI.
-        Shows a confirmation message to the user.
-        """
-        # Toggle theme value
         new_theme = "Dark" if self.theme_var.get() == "Light" else "Light"
         self.theme_var.set(new_theme)
         ctk.set_appearance_mode(new_theme)
 
-        # Save the new theme setting to the database
         self.settings.theme = new_theme
         self.settings.save()
 
-        # Update the UI to reflect the new theme
         self.current_theme_label.configure(text=f"Current Theme: {new_theme}")
 
-        # Call the refresh callback if provided
         if self.refresh_callback:
             self.refresh_callback()
 
-        # Show confirmation message
         messagebox.showinfo("Success", f"Theme changed to {new_theme}")
 
     def export_transactions(self):
