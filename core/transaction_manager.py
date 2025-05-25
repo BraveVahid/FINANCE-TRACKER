@@ -11,9 +11,9 @@ class TransactionManager:
             date = datetime.now()
             
         transaction = Transaction.create(
-            amount=amount,
-            category_name=category_name,
-            description=description,
+            amount=CryptoManager.encrypt_number(amount),
+            category_name=CryptoManager.encrypt_string(category_name),
+            description=CryptoManager.encrypt_string(description) if description else "",
             is_income=is_income,
             date=date
         )
@@ -33,4 +33,8 @@ class TransactionManager:
 
     @staticmethod
     def get_all_categories():
-        return [t.category_name for t in Transaction.select(fn.DISTINCT(Transaction.category_name))]
+        transactions = Transaction.select()
+        categories = set()
+        for t in transactions:
+            categories.add(CryptoManager.decrypt_string(t.category_name))
+        return list(categories)

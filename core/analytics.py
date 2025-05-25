@@ -2,6 +2,7 @@ from peewee import fn
 from datetime import datetime
 import pandas as pd
 from database.models import Transaction
+from utils.crypto import CryptoManager
 
 
 class FinancialAnalytics:
@@ -10,20 +11,20 @@ class FinancialAnalytics:
         current_month = datetime.now().month
         current_year = datetime.now().year
         
-        income_query = (Transaction.select(fn.SUM(Transaction.amount).alias('total')).where(
+        income_transactions = (Transaction.select().where(
             (Transaction.is_income == True) &
             (fn.strftime('%m', Transaction.date) == str(current_month).zfill(2)) &
             (fn.strftime('%Y', Transaction.date) == str(current_year))
         ))
 
-        expense_query = (Transaction.select(fn.SUM(Transaction.amount).alias('total')).where(
+        expense_transactions = (Transaction.select().where(
             (Transaction.is_income == False) &
             (fn.strftime('%m', Transaction.date) == str(current_month).zfill(2)) &
             (fn.strftime('%Y', Transaction.date) == str(current_year))
         ))
         
-        income = income_query.scalar() or 0
-        expenses = expense_query.scalar() or 0
+        income = sum(CryptoManager.decrypt_number(t.amount) for t in income_transactions)
+        expenses = sum(CryptoManager.decrypt_number(t.amount) for t in expense_transactions)
         
         return {
             'income': income,
@@ -36,18 +37,21 @@ class FinancialAnalytics:
         current_month = datetime.now().month
         current_year = datetime.now().year
         
-        expense_data = (Transaction.select(
-            Transaction.category_name,
-            fn.SUM(Transaction.amount).alias('total')
-        ).where(
+        expense_transactions = (Transaction.select().where(
             (Transaction.is_income == False) &
             (fn.strftime('%m', Transaction.date) == str(current_month).zfill(2)) &
             (fn.strftime('%Y', Transaction.date) == str(current_year))
-        ).group_by(Transaction.category_name))
+        ))
         
         result = {}
-        for item in expense_data:
-            result[item.category_name] = item.total
+        for transaction in expense_transactions:
+            category = CryptoManager.decrypt_string(transaction.category_name)
+            amount = CryptoManager.decrypt_number(transaction.amount)
+            
+            if category in result:
+                result[category] += amount
+            else:
+                result[category] = amount
             
         total_expenses = sum(result.values()) or 1
 
@@ -72,12 +76,11 @@ class FinancialAnalytics:
             data.append({
                 'id': t.id,
                 'date': t.date,
-                'category': t.category_name,
-                'description': t.description,
-                'amount': t.amount,
+                'category': CryptoManager.decrypt_string(t.category_name),
+                'description': CryptoManager.decrypt_string(t.description) if t.description else None,
+                'amount': CryptoManager.decrypt_number(t.amount),
                 'is_income': t.is_income
             })
-            
         return pd.DataFrame(data)
 
     @staticmethod
@@ -91,20 +94,20 @@ class FinancialAnalytics:
             target_month = ((current_month - i - 1) % 12) + 1
             target_year = current_year if target_month <= current_month else current_year - 1
             
-            income_query = (Transaction.select(fn.SUM(Transaction.amount).alias('total')).where(
+            income_transactions = (Transaction.select().where(
                 (Transaction.is_income == True) &
                 (fn.strftime('%m', Transaction.date) == str(target_month).zfill(2)) &
                 (fn.strftime('%Y', Transaction.date) == str(target_year))
             ))
                            
-            expense_query = (Transaction.select(fn.SUM(Transaction.amount).alias('total')).where(
+            expense_transactions = (Transaction.select().where(
                 (Transaction.is_income == False) &
                 (fn.strftime('%m', Transaction.date) == str(target_month).zfill(2)) &
                 (fn.strftime('%Y', Transaction.date) == str(target_year))
             ))
             
-            income = income_query.scalar() or 0
-            expenses = expense_query.scalar() or 0
+            income = sum(CryptoManager.decrypt_number(t.amount) for t in income_transactions)
+            expenses = sum(CryptoManager.decrypt_number(t.amount) for t in expense_transactions)
             
             month_name = datetime(target_year, target_month, 1).strftime('%b')
             
