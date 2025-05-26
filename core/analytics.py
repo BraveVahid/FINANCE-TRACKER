@@ -6,6 +6,7 @@ from utils.crypto import CryptoManager
 
 
 class FinancialAnalytics:
+
     @staticmethod
     def get_monthly_balance():
         current_month = datetime.now().month
@@ -13,23 +14,23 @@ class FinancialAnalytics:
         
         income_transactions = (Transaction.select().where(
             (Transaction.is_income == True) &
-            (fn.strftime('%m', Transaction.date) == str(current_month).zfill(2)) &
-            (fn.strftime('%Y', Transaction.date) == str(current_year))
+            (fn.strftime("%m", Transaction.date) == str(current_month).zfill(2)) &
+            (fn.strftime("%Y", Transaction.date) == str(current_year))
         ))
 
         expense_transactions = (Transaction.select().where(
             (Transaction.is_income == False) &
-            (fn.strftime('%m', Transaction.date) == str(current_month).zfill(2)) &
-            (fn.strftime('%Y', Transaction.date) == str(current_year))
-        ))
-        
+            (fn.strftime("%m", Transaction.date) == str(current_month).zfill(2)) &
+            (fn.strftime("%Y", Transaction.date) == str(current_year))
+        )) # <class 'peewee.ModelSelect'>
+
         income = sum(CryptoManager.decrypt_number(t.amount) for t in income_transactions)
         expenses = sum(CryptoManager.decrypt_number(t.amount) for t in expense_transactions)
         
         return {
-            'income': income,
-            'expenses': expenses,
-            'balance': income - expenses
+            "income": income,
+            "expenses": expenses,
+            "balance": income - expenses
         }
 
     @staticmethod
@@ -39,8 +40,8 @@ class FinancialAnalytics:
         
         expense_transactions = (Transaction.select().where(
             (Transaction.is_income == False) &
-            (fn.strftime('%m', Transaction.date) == str(current_month).zfill(2)) &
-            (fn.strftime('%Y', Transaction.date) == str(current_year))
+            (fn.strftime("%m", Transaction.date) == str(current_month).zfill(2)) &
+            (fn.strftime("%Y", Transaction.date) == str(current_year))
         ))
         
         result = {}
@@ -57,18 +58,14 @@ class FinancialAnalytics:
 
         for category, amount in result.items():
             result[category] = {
-                'amount': amount,
-                'percentage': (amount / total_expenses) * 100
+                "amount": amount,
+                "percentage": (amount / total_expenses) * 100
             }
         return result
 
     @staticmethod
     def get_transaction_history(limit=50):
-        query = Transaction.select().order_by(Transaction.date.desc())
-        
-        if limit is not None:
-            query = query.limit(limit)
-        
+        query = Transaction.select().order_by(Transaction.date.desc()).limit(limit)
         transactions = query
 
         data = []

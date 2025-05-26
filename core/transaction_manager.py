@@ -1,6 +1,5 @@
 from datetime import datetime
 from database.models import Transaction
-from peewee import fn
 from utils.crypto import CryptoManager
 
 
@@ -26,10 +25,6 @@ class TransactionManager:
             transaction.delete_instance()
             return True
         return False
-
-    @staticmethod
-    def get_transaction(transaction_id):
-        return Transaction.get_or_none(Transaction.id == transaction_id)
 
     @staticmethod
     def get_all_categories():
