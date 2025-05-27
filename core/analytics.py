@@ -22,7 +22,7 @@ class FinancialAnalytics:
             (Transaction.is_income == False) &
             (fn.strftime("%m", Transaction.date) == str(current_month).zfill(2)) &
             (fn.strftime("%Y", Transaction.date) == str(current_year))
-        )) # <class 'peewee.ModelSelect'>
+        ))
 
         income = sum(CryptoManager.decrypt_number(t.amount) for t in income_transactions)
         expenses = sum(CryptoManager.decrypt_number(t.amount) for t in expense_transactions)
@@ -65,18 +65,17 @@ class FinancialAnalytics:
 
     @staticmethod
     def get_transaction_history(limit=50):
-        query = Transaction.select().order_by(Transaction.date.desc()).limit(limit)
-        transactions = query
+        transactions = Transaction.select().order_by(Transaction.date.desc()).limit(limit)
 
         data = []
         for t in transactions:
             data.append({
-                'id': t.id,
-                'date': t.date,
-                'category': CryptoManager.decrypt_string(t.category_name),
-                'description': CryptoManager.decrypt_string(t.description) if t.description else None,
-                'amount': CryptoManager.decrypt_number(t.amount),
-                'is_income': t.is_income
+                "id": t.id,
+                "date": t.date,
+                "category": CryptoManager.decrypt_string(t.category_name),
+                "description": CryptoManager.decrypt_string(t.description) if t.description else None,
+                "amount": CryptoManager.decrypt_number(t.amount),
+                "is_income": t.is_income
             })
         return pd.DataFrame(data)
 
@@ -93,26 +92,26 @@ class FinancialAnalytics:
             
             income_transactions = (Transaction.select().where(
                 (Transaction.is_income == True) &
-                (fn.strftime('%m', Transaction.date) == str(target_month).zfill(2)) &
-                (fn.strftime('%Y', Transaction.date) == str(target_year))
+                (fn.strftime("%m", Transaction.date) == str(target_month).zfill(2)) &
+                (fn.strftime("%Y", Transaction.date) == str(target_year))
             ))
                            
             expense_transactions = (Transaction.select().where(
                 (Transaction.is_income == False) &
-                (fn.strftime('%m', Transaction.date) == str(target_month).zfill(2)) &
-                (fn.strftime('%Y', Transaction.date) == str(target_year))
+                (fn.strftime("%m", Transaction.date) == str(target_month).zfill(2)) &
+                (fn.strftime("%Y", Transaction.date) == str(target_year))
             ))
             
             income = sum(CryptoManager.decrypt_number(t.amount) for t in income_transactions)
             expenses = sum(CryptoManager.decrypt_number(t.amount) for t in expense_transactions)
             
-            month_name = datetime(target_year, target_month, 1).strftime('%b')
+            month_name = datetime(target_year, target_month, 1).strftime("%b")
             
             result.append({
-                'month': month_name,
-                'income': income,
-                'expenses': expenses,
-                'balance': income - expenses
+                "month": month_name,
+                "income": income,
+                "expenses": expenses,
+                "balance": income - expenses
             })
             
         return result[::-1]

@@ -1,8 +1,0 @@
-# Ignore PyCharm project files
-.idea/
-
-# Ignore Python cache files
-__pycache__/
-
-# Ignore SQLite database file
-finance_assistant.db

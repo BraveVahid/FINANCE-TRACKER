@@ -83,7 +83,6 @@ class TransactionPanel(ctk.CTkFrame):
         self.date_entry.insert(0, current_date)
         self.date_entry.pack(fill="x", pady=(0, 5))
 
-        # Form buttons
         button_frame = ctk.CTkFrame(self.input_frame, fg_color="transparent")
         button_frame.pack(fill="x", pady=15, padx=20)
 
@@ -112,26 +111,25 @@ class TransactionPanel(ctk.CTkFrame):
         tree_frame = ctk.CTkFrame(self.list_frame)
         tree_frame.pack(fill="both", expand=True, padx=20, pady=10)
 
-        columns = ('date', 'category', 'description', 'amount', 'type')
-        self.tree = ttk.Treeview(tree_frame, columns=columns, show='headings')
+        columns = ("date", "category", "description", "amount", "type")
+        self.tree = ttk.Treeview(tree_frame, columns=columns, show="headings")
 
-        self.tree.heading('date', text='Date')
-        self.tree.heading('category', text='Category')
-        self.tree.heading('description', text='Description')
-        self.tree.heading('amount', text='Amount')
-        self.tree.heading('type', text='Type')
+        self.tree.heading("date", text="Date")
+        self.tree.heading("category", text="Category")
+        self.tree.heading("description", text="Description")
+        self.tree.heading("amount", text="Amount")
+        self.tree.heading("type", text="Type")
 
-        self.tree.column('date', width=100)
-        self.tree.column('category', width=120)
-        self.tree.column('description', width=200)
-        self.tree.column('amount', width=100)
-        self.tree.column('type', width=70)
+        self.tree.column("date", width=100)
+        self.tree.column("category", width=120)
+        self.tree.column("description", width=200)
+        self.tree.column("amount", width=100)
+        self.tree.column("type", width=70)
 
         scrollbar = ttk.Scrollbar(tree_frame, orient=tk.VERTICAL, command=self.tree.yview)
         self.tree.configure(yscroll=scrollbar.set)
         scrollbar.pack(side="right", fill="y")
         self.tree.pack(side="left", fill="both", expand=True)
-
         self.tree.bind("<Button-3>", self.show_context_menu)
 
         button_frame = ctk.CTkFrame(self.list_frame, fg_color="transparent")
@@ -172,7 +170,7 @@ class TransactionPanel(ctk.CTkFrame):
 
         if not is_income:
             balance_data = self.analytics.get_monthly_balance()
-            current_balance = balance_data['income'] - balance_data['expenses']
+            current_balance = balance_data["income"] - balance_data["expenses"]
 
             if amount_result > current_balance:
                 messagebox.showerror("Insufficient Funds", f"This expense of ${amount_result:.2f} would result in a negative balance. Current balance: ${current_balance:.2f}")
@@ -214,14 +212,14 @@ class TransactionPanel(ctk.CTkFrame):
         df = self.analytics.get_transaction_history()
 
         for _, row in df.iterrows():
-            date = row['date'].strftime("%Y-%m-%d")
-            amount = f"${row['amount']:.2f}"
-            type_str = "Income" if row['is_income'] else "Expense"
+            date = row["date"].strftime("%Y-%m-%d")
+            amount = f"${row["amount"]:.2f}"
+            type_str = "Income" if row["is_income"] else "Expense"
 
-            self.tree.insert('', tk.END, iid=row['id'], values=(
+            self.tree.insert("", tk.END, iid=row["id"], values=(
                 date,
-                row['category'],
-                row['description'] or "",
+                row["category"],
+                row["description"] or "",
                 amount,
                 type_str
             ))
@@ -239,19 +237,19 @@ class TransactionPanel(ctk.CTkFrame):
         df = self.analytics.get_transaction_history()
 
         df_filtered = df[
-            df['description'].str.lower().str.contains(search_term, na=False) |
-            df['category'].str.lower().str.contains(search_term, na=False)
+            df["description"].str.lower().str.contains(search_term, na=False) |
+            df["category"].str.lower().str.contains(search_term, na=False)
             ]
 
         for _, row in df_filtered.iterrows():
-            date = row['date'].strftime("%Y-%m-%d")
-            amount = f"${row['amount']:.2f}"
-            type_str = "Income" if row['is_income'] else "Expense"
+            date = row["date"].strftime("%Y-%m-%d")
+            amount = f"${row["amount"]:.2f}"
+            type_str = "Income" if row["is_income"] else "Expense"
 
-            self.tree.insert('', tk.END, iid=row['id'], values=(
+            self.tree.insert("", tk.END, iid=row["id"], values=(
                 date,
-                row['category'],
-                row['description'] or "",
+                row["category"],
+                row["description"] or "",
                 amount,
                 type_str
             ))

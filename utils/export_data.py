@@ -1,6 +1,5 @@
 import csv
 
-
 def export_transactions(transactions, file_path="transactions"):
     try:
         with open(file_path, "w", newline="") as file:

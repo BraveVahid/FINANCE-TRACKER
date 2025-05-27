@@ -103,14 +103,14 @@ class DashboardFrame(ctk.CTkFrame):
             
             balance_data = self.analytics.get_monthly_balance()
 
-            self.income_value.configure(text=f"${balance_data['income']:.2f}")
-            self.expenses_value.configure(text=f"${balance_data['expenses']:.2f}")
+            self.income_value.configure(text=f"${balance_data["income"]:.2f}")
+            self.expenses_value.configure(text=f"${balance_data["expenses"]:.2f}")
 
-            balance_amount = balance_data['balance']
+            balance_amount = balance_data["balance"]
             if balance_amount >= 0:
                 balance_color = "#4CAF50"
             else:
-                balance_color = "#F44336" 
+                balance_color = "#F44336"
                 
             self.balance_value.configure(text=f"${balance_amount:.2f}", text_color=balance_color)
 
@@ -119,8 +119,8 @@ class DashboardFrame(ctk.CTkFrame):
 
             self.update_charts(expense_data, trend_data)
             
-        except Exception as e:
-            print(f"Error refreshing data: {e.__class__.__name__}")
+        except:
+            print(f"Error refreshing data")
 
     def update_charts(self, expense_data, trend_data):
         try:
@@ -148,5 +148,5 @@ class DashboardFrame(ctk.CTkFrame):
             self.bar_chart = chart_generator.create_bar_chart(trend_data, self.bar_chart_frame, theme=current_theme)
             if self.bar_chart:
                 self.bar_chart.get_tk_widget().pack(fill="both", expand=True)
-        except Exception as e:
-            print(f"Error updating charts: {e.__class__.__name__}")
+        except:
+            print(f"Error updating charts")

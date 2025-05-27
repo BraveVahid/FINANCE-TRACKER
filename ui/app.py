@@ -54,10 +54,6 @@ class FinanceTrackerApp:
         self.settings_panel.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
     
     def refresh_dashboard(self):
-        """
-        Refresh the dashboard data.
-        Called when transactions are added or deleted to update financial metrics.
-        """
         self.dashboard.refresh_data()
     
     def refresh_all(self):

@@ -2,6 +2,7 @@ from datetime import datetime
 
 
 class InputValidator:
+
     @staticmethod
     def validate_amount(amount):
         try:

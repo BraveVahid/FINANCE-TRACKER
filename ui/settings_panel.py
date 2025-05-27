@@ -80,14 +80,14 @@ class SettingsPanel(ctk.CTkFrame):
 
         transactions = []
         for _, row in df.iterrows():
-            date_str = row['date'].strftime("%Y-%m-%d")
+            date_str = row["date"].strftime("%Y-%m-%d")
 
             transaction = {
-                'Date': date_str,
-                'Category': row['category'],
-                'Description': row['description'] or "",
-                'Amount': f"{row['amount']:.2f}",
-                'Type': "Income" if row['is_income'] else "Expense"
+                "Date": date_str,
+                "Category": row["category"],
+                "Description": row["description"] or "",
+                "Amount": f"{row["amount"]:.2f}",
+                "Type": "Income" if row["is_income"] else "Expense"
             }
             transactions.append(transaction)
 
