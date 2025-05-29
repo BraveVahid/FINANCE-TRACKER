@@ -96,8 +96,8 @@ The application uses SQLite database (`finance_tracker.db`) to store:
 - **Local Storage**: All data is stored locally on your machine
 
 ## Screenshots
-![Dark Mode](Screenshot1.png)
-![Light Mode](Screenshot2.png)
+![Dark Mode](screenshot1.png)
+![Light Mode](screenshot2.png)
 
 ## Contributing
 
