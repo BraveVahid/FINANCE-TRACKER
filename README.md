@@ -11,8 +11,7 @@ A Python desktop application with CustomTkinter GUI for tracking income/expenses
 - **Theme Support**: Light and dark mode themes
 - **Data Export**: Export transaction history to CSV format
 - **Search & Filter**: Search through transaction history
-- **Input Validation**: Comprehensive validation for all user inputs
-- 
+
 ### Dashboard
 - Monthly summary with income, expenses, and balance
 - Expense breakdown pie chart
@@ -22,7 +21,6 @@ A Python desktop application with CustomTkinter GUI for tracking income/expenses
 ### Transaction Management
 - Easy-to-use form for adding transactions
 - Transaction history with search functionality
-- Right-click context menu for quick actions
 
 ## Installation
 
@@ -33,7 +31,7 @@ A Python desktop application with CustomTkinter GUI for tracking income/expenses
 ### Setup
 1. Clone the repository:
 ```bash
-git clone <https://github.com/BraveVahid/FINANCE-TRACKER>
+git clone https://github.com/BraveVahid/FINANCE-TRACKER
 cd FINANCE-TRACKER
 ```
 
