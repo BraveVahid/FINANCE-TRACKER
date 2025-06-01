@@ -3,10 +3,10 @@ from datetime import datetime
 import pandas as pd
 from database.models import Transaction
 from utils.crypto import CryptoManager
+from dateutil.relativedelta import relativedelta
 
 
 class FinancialAnalytics:
-
     @staticmethod
     def get_monthly_balance():
         current_month = datetime.now().month
@@ -24,8 +24,8 @@ class FinancialAnalytics:
             (fn.strftime("%Y", Transaction.date) == str(current_year))
         ))
 
-        income = sum(CryptoManager.decrypt_number(t.amount) for t in income_transactions)
-        expenses = sum(CryptoManager.decrypt_number(t.amount) for t in expense_transactions)
+        income = sum([CryptoManager.decrypt_number(t.amount) for t in income_transactions])
+        expenses = sum([CryptoManager.decrypt_number(t.amount) for t in expense_transactions])
         
         return {
             "income": income,
@@ -80,38 +80,36 @@ class FinancialAnalytics:
         return pd.DataFrame(data)
 
     @staticmethod
-    def get_monthly_trend(months=6):
+    def get_monthly_trend():
         result = []
-        
-        current_month = datetime.now().month
-        current_year = datetime.now().year
-        
-        for i in range(months):
-            target_month = ((current_month - i - 1) % 12) + 1
-            target_year = current_year if target_month <= current_month else current_year - 1
-            
+
+        current_date = datetime.now().replace(day=1)
+
+        for i in range(6):
+            target_date = current_date - relativedelta(months=i)
+            target_year = target_date.year
+            target_month = target_date.month
+
             income_transactions = (Transaction.select().where(
                 (Transaction.is_income == True) &
                 (fn.strftime("%m", Transaction.date) == str(target_month).zfill(2)) &
                 (fn.strftime("%Y", Transaction.date) == str(target_year))
             ))
-                           
             expense_transactions = (Transaction.select().where(
                 (Transaction.is_income == False) &
                 (fn.strftime("%m", Transaction.date) == str(target_month).zfill(2)) &
                 (fn.strftime("%Y", Transaction.date) == str(target_year))
             ))
-            
-            income = sum(CryptoManager.decrypt_number(t.amount) for t in income_transactions)
-            expenses = sum(CryptoManager.decrypt_number(t.amount) for t in expense_transactions)
-            
-            month_name = datetime(target_year, target_month, 1).strftime("%b")
-            
+
+            income = sum([CryptoManager.decrypt_number(t.amount) for t in income_transactions])
+            expenses = sum([CryptoManager.decrypt_number(t.amount) for t in expense_transactions])
+            month_name = target_date.strftime("%b")
+
             result.append({
                 "month": month_name,
                 "income": income,
                 "expenses": expenses,
                 "balance": income - expenses
             })
-            
+
         return result[::-1]

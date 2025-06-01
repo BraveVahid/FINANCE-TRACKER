@@ -11,10 +11,8 @@ def export_transactions(transactions, file_path="transactions"):
             writer.writeheader()
             writer.writerows(transactions)
             return True, file_path
-        
     except FileNotFoundError:
         return False, f"Error: The directory for '{file_path}' does not exist."
-
     except PermissionError:
         return False, f"Error: Access to write to this location is denied '{file_path}'."
     except:

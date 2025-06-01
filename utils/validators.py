@@ -6,7 +6,7 @@ class InputValidator:
     @staticmethod
     def validate_amount(amount):
         try:
-            amount = float(amount)
+            amount = float(amount.strip())
             if amount <= 0:
                 return False, "Amount must be greater than zero"
             return True, amount
@@ -30,18 +30,17 @@ class InputValidator:
     @staticmethod
     def validate_date(date):
         try:
-            input_date = datetime.strptime(date, "%Y-%m-%d")
+            input_date = datetime.strptime(date.strip(), "%Y-%m-%d")
             current_date = datetime.now()
 
             if input_date.date() > current_date.date():
                 return False, "Future-dated entries are not allowed."
-
             return True, input_date
         except ValueError:
             return False, "The date must be entered in the format YYYY-MM-DD"
 
     @staticmethod
     def validate_description(description):
-        if len(description) > 100:
+        if len(description.strip()) > 100:
             return False, "The description must not be more than 100 characters."
         return True, description

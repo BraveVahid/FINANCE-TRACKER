@@ -6,15 +6,12 @@ from utils.crypto import CryptoManager
 class TransactionManager:
     @staticmethod
     def add_transaction(amount, category_name, description="", is_income=False, date=None):
-        if date is None:
-            date = datetime.now()
-            
         transaction = Transaction.create(
             amount=CryptoManager.encrypt_number(amount),
             category_name=CryptoManager.encrypt_string(category_name),
             description=CryptoManager.encrypt_string(description) if description else "",
             is_income=is_income,
-            date=date
+            date=datetime.now() if date is None else date
         )
         return transaction
 

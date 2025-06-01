@@ -9,6 +9,7 @@ class BaseModel(Model):
 
 
 class Transaction(BaseModel):
+    id = AutoField()
     amount = FloatField() 
     description = CharField(null=True)
     category_name = CharField()
@@ -17,4 +18,5 @@ class Transaction(BaseModel):
 
 
 class Settings(BaseModel):
+    id = AutoField()
     theme = CharField(default="Light")
